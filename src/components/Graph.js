@@ -1,0 +1,50 @@
+import React, {useState, useEffect} from 'react'
+import Node from './Node'
+import Edge from './Edge'
+
+
+const getRandomInt = (min, max) => {
+  min = Math.ceil(min)
+  max = Math.floor(max)
+  return Math.floor(Math.random() * (max - min + 1)) + min
+}
+
+const Graph = ({dataset}) => {
+
+  const [vertexes, setVertexes] = useState(new Map())
+  const [edges, setEdges] = useState(new Map())
+
+  useEffect(() => {
+    const newVertexes = new Map()
+    const newEdges = new Map()
+    dataset.vertexes.forEach(vertex => {
+      newVertexes.set(vertex, {
+        x: getRandomInt(5, 158),
+        y: getRandomInt(5, 88),
+        label: vertex
+      })
+    })
+    setVertexes(newVertexes)
+
+    dataset.edges.forEach(edge => {
+      const [first, second] = edge.split('-')
+      const { x: x1, y: y1 } = newVertexes.get(parseInt(first))
+      const { x: x2, y: y2 } = newVertexes.get(parseInt(second))
+      newEdges.set(edge, { x1, y1, x2, y2, key: edge })
+    })
+    setEdges(newEdges)
+  }, [dataset])
+
+  return (
+    <svg viewBox="0 0 162 92" width="100%" height="100%">
+      {[...edges.values()].map(({key, ...rest}) =>
+        <Edge key={key} {...rest} />
+      )}
+      {[...vertexes.values()].map(({label, x, y}) =>
+        <Node key={label} label={label} x={x} y={y} size={2}/>
+      )}
+    </svg>
+  )
+}
+
+export default Graph
