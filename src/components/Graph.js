@@ -1,6 +1,7 @@
 import React, {useState, useEffect} from 'react'
 import Node from './Node'
 import Edge from './Edge'
+import Community from './Community'
 
 
 const getRandomInt = (min, max) => {
@@ -13,6 +14,7 @@ const Graph = ({dataset}) => {
 
   const [vertexes, setVertexes] = useState(new Map())
   const [edges, setEdges] = useState(new Map())
+  const [plexes, setPlexes] = useState([])
 
   useEffect(() => {
     const newVertexes = new Map()
@@ -33,6 +35,11 @@ const Graph = ({dataset}) => {
       newEdges.set(edge, { x1, y1, x2, y2, key: edge })
     })
     setEdges(newEdges)
+
+    dataset.plexes.forEach((plex) => {
+      plexes.push(plex.map(node => newVertexes.get(node)))
+    })
+    setPlexes(plexes)
   }, [dataset])
 
   return (
@@ -42,6 +49,9 @@ const Graph = ({dataset}) => {
       )}
       {[...vertexes.values()].map(({label, x, y}) =>
         <Node key={label} label={label} x={x} y={y} size={2}/>
+      )}
+      {plexes.splice(0,1).map((plex, i) =>
+        <Community key={i} nodes={plex} />
       )}
     </svg>
   )

@@ -1,0 +1,8 @@
+export const top = 'top'
+export const right = 'right'
+export const bottom = 'bottom'
+export const left = 'left'
+export const top_right = 'top right'
+export const bottom_right = 'bottom right'
+export const bottom_left = 'bottom left'
+export const top_left = 'top_left'
