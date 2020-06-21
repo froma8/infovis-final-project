@@ -1,7 +1,14 @@
-import React from 'react'
+import React, {useState, useEffect} from 'react'
 import * as p from '../constants/positions'
 
 const Community = ({ nodes }) => {
+
+  const [ avg, setAvg ] = useState(0)
+  const [ path, setPath ] = useState('')
+
+  useEffect(() => {
+    setPath(getPath())
+  }, [])
 
   /**
    * Ritorna la posizione di b rispetto ad a
@@ -14,28 +21,28 @@ const Community = ({ nodes }) => {
    * @returns {string} una delle posizioni costanti
    */
   const findRelativePosition = (a, b) => {
-    if (a.y === b.y && a.y < b.y) {
+    if (a.x === b.x && a.y > b.y) {
       return p.top
     }
-    if (a.y === b.y && a.y > b.y) {
+    if (a.x === b.x && a.y <= b.y) {
       return p.bottom
     }
-    if (a.x === b.x && a.x > b.y) {
+    if (a.y === b.y && a.x > b.x) {
       return p.left
     }
-    if (a.x === b.x && a.x < b.y) {
+    if (a.x === b.x && a.x <= b.x) {
       return p.right
     }
-    if (a.x < b.x && a.y < b.y) {
+    if (a.x <= b.x && a.y <= b.y) {
       return p.top_right
     }
-    if (a.x < b.x && a.y > b.y) {
+    if (a.x <= b.x && a.y >= b.y) {
       return p.bottom_right
     }
-    if (a.x > b.x && a.y > b.y) {
+    if (a.x >= b.x && a.y >= b.y) {
       return p.bottom_left
     }
-    if (a.x > b.x && a.y < b.y) {
+    if (a.x >= b.x && a.y <= b.y) {
       return p.top_left
     }
   }
@@ -55,45 +62,24 @@ const Community = ({ nodes }) => {
     }))
   }
 
-  /**
-   * Ordina l'array in modo da visitare i punti da quello piu a sinistra in senso orario
-   * @returns {[T]}
-   */
   const sortToCicleClockwise = () => {
-    const start = [...nodes].sort((a, b) => a.x - b.x)[0]
-    const sorted = [start]
-    let rest = [...nodes].filter(n => n.label !== start.label)
-    let latestNode = start
-
-    const getNextNode = (rest, lastInserted) => {
-      let nextNode
-      // se ci sono nodi a destra, seleziona quello piu vicino e con y minore
-      if (rest.some(n => n.x > lastInserted.x)) {
-        const sortByX = [...rest].sort((a, b) => a.x - b.x)
-        const nearest = sortByX[0]
-        const restSorted = sortByX.slice(1)
-        if (restSorted.some(n => n.y > nearest.y)) {
-          nextNode = sortByX.sort((a, b) => a.y - b.y)[0]
-        } else {
-          nextNode = nearest
-        }
+    const sortByX = [...nodes].sort((a, b) => a.x - b.x)
+    const start = sortByX[0]
+    const rest = sortByX.slice(1)
+    const avgY = rest.reduce((acc, curr) => acc + curr.y, 0) / rest.length
+    setAvg(avgY)
+    const isAbove = (node) => {
+      if (node.y <= avgY - 10) {
+        return true
+      } else if (node.y <= avgY && node.y > avgY - 10) {
+        return start.y > node.y
       } else {
-        // altrimenti seleziona quello piu lontano
-        const sortByX = [...rest].sort((a, b) => b.x - a.x)
-        nextNode = sortByX[0]
+        return false
       }
-
-      return nextNode
     }
-
-    while (rest.length !== 0) {
-      const nextNode = getNextNode(rest, latestNode)
-      latestNode = nextNode
-      sorted.push(nextNode)
-      rest = rest.filter(n => n.label !== nextNode.label)
-    }
-    console.log(sorted)
-    return sorted
+    const above = rest.filter(isAbove)
+    const under = rest.filter(n => !above.find(a => a.label === n.label)).sort((a, b) => b.x - a.x)
+    return [start, ...above, ...under]
   }
 
   /**
@@ -108,18 +94,51 @@ const Community = ({ nodes }) => {
       const b = sortedNodes[i + 1 === sortedNodes.length ? 0 : i + 1]
       const position = findRelativePosition(a, b)
       let fx, fy, x1, y1, sx, sy
+
       switch (position) {
+        case p.top:
+          fx = a.left.x
+          fy = a.left.y
+          x1 = 0
+          y1 = 0
+          sx = b.left.x
+          sy = b.left.y
+          break
+        case p.right:
+          fx = a.top.x
+          fy = a.top.y
+          x1 = 0
+          y1 = 0
+          sx = b.top.x
+          sy = b.top.y
+          break
+        case p.bottom:
+          fx = a.right.x
+          fy = a.right.y
+          x1 = 0
+          y1 = 0
+          sx = b.right.x
+          sy = b.right.y
+          break
+        case p.left:
+          fx = a.bottom.x
+          fy = a.bottom.y
+          x1 = 0
+          y1 = 0
+          sx = b.bottom.x
+          sy = b.bottom.y
+          break
         case p.top_right:
           fx = a.top.x
           fy = a.top.y
-          x1 = ((b.x - a.x) / 2) - 1
-          y1 = ((b.x - a.x) / 2) - 1
+          x1 = 0
+          y1 = 0
           sx = b.top.x
           sy = b.top.y
           break
         case p.bottom_right:
-          fx = a.right.x
-          fy = a.right.y
+          fx = a.top.x
+          fy = a.top.y
           x1 = ((b.x - a.x) / 2) + 1
           y1 = ((b.x - a.x) / 2) + 1
           sx = b.top.x
@@ -150,9 +169,9 @@ const Community = ({ nodes }) => {
           sy = 0
       }
       if (i === 0) {
-        path += `M ${fx} ${fy} Q ${x1} ${y1} ${sx} ${sy} L `
+        path += `M ${fx} ${fy} L ${sx} ${sy} L `
       } else {
-        path += `${fx} ${fy} Q ${x1} ${y1} ${sx} ${sy} `
+        path += `${fx} ${fy} L ${sx} ${sy} `
         if (i !== sortedNodes.length - 1) {
           path += 'L '
         }
@@ -163,12 +182,18 @@ const Community = ({ nodes }) => {
     return path
   }
 
+  const randomNumber = (min, max) => Math.floor(Math.random() * (max - min + 1) + min);
+  const randomByte = () => randomNumber(0, 255)
+  const randomPercent = () => (randomNumber(50, 100) * 0.01).toFixed(2)
+  const randomCssRgba = () => `rgba(${[randomByte(), randomByte(), randomByte(), 1].join(',')})`
+
   return (
     <g>
       {nodes && nodes.map(node =>
-        <circle key={node.label} cx={node.x} cy={node.y} r={4} fill="rgba(12,15,234,0.3)" />
+        <circle key={node.label} cx={node.x} cy={node.y} r={4} fill="white" />
       )}
-      <path fill="rgba(12,15,234,0.3)" d={getPath()} />
+      <path fill={randomCssRgba()} d={path} />
+      {/*<line stroke="red" strokeWidth="1px" x1={0} y1={avg} x2={162} y2={avg} />*/}
     </g>
   )
 }

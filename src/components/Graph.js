@@ -44,14 +44,14 @@ const Graph = ({dataset}) => {
 
   return (
     <svg viewBox="0 0 162 92" width="100%" height="100%">
+      {plexes.map((plex, i) =>
+        <Community key={i} nodes={plex} />
+      )}
       {[...edges.values()].map(({key, ...rest}) =>
         <Edge key={key} {...rest} />
       )}
       {[...vertexes.values()].map(({label, x, y}) =>
         <Node key={label} label={label} x={x} y={y} size={2}/>
-      )}
-      {plexes.splice(0,1).map((plex, i) =>
-        <Community key={i} nodes={plex} />
       )}
     </svg>
   )
