@@ -54,10 +54,10 @@ const Community = ({ nodes }) => {
    */
   const addAnchors = (nodes) => {
     return [...nodes].map((node) => ({
-      top: { x: node.x, y: node.y - 4 },
-      right: { x: node.x + 4, y: node.y },
-      bottom: { x: node.x, y: node.y + 4 },
-      left: { x: node.x - 4, y: node.y },
+      top: { x: node.x, y: node.y - 20 },
+      right: { x: node.x + 20, y: node.y },
+      bottom: { x: node.x, y: node.y + 20 },
+      left: { x: node.x - 20, y: node.y },
       ...node
     }))
   }
@@ -69,9 +69,9 @@ const Community = ({ nodes }) => {
     const avgY = rest.reduce((acc, curr) => acc + curr.y, 0) / rest.length
     setAvg(avgY)
     const isAbove = (node) => {
-      if (node.y <= avgY - 10) {
+      if (node.y <= avgY - 20) {
         return true
-      } else if (node.y <= avgY && node.y > avgY - 10) {
+      } else if (node.y <= avgY && node.y > avgY - 20) {
         return start.y > node.y
       } else {
         return false

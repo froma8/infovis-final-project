@@ -21,8 +21,8 @@ const Graph = ({dataset}) => {
     const newEdges = new Map()
     dataset.vertexes.forEach(vertex => {
       newVertexes.set(vertex, {
-        x: getRandomInt(5, 158),
-        y: getRandomInt(5, 88),
+        x: getRandomInt(15, 1900),
+        y: getRandomInt(15, 850),
         label: vertex
       })
     })
@@ -43,15 +43,15 @@ const Graph = ({dataset}) => {
   }, [dataset])
 
   return (
-    <svg viewBox="0 0 162 92" width="100%" height="100%">
-      {plexes.map((plex, i) =>
+    <svg viewBox="0 0 1920 900" width="100%" height="100%">
+      {plexes.slice(0, 1).map((plex, i) =>
         <Community key={i} nodes={plex} />
       )}
       {[...edges.values()].map(({key, ...rest}) =>
         <Edge key={key} {...rest} />
       )}
       {[...vertexes.values()].map(({label, x, y}) =>
-        <Node key={label} label={label} x={x} y={y} size={2}/>
+        <Node key={label} label={label} x={x} y={y} size={15}/>
       )}
     </svg>
   )
