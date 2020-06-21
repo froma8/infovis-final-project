@@ -1,9 +1,19 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 
-const Edge = ({ x1, y1, x2, y2 }) => {
-  return (
-    <line x1={x1} y1={y1} x2={x2} y2={y2} stroke="black" strokeWidth={0.01}/>
-  )
+const Edge = ({ points }) => {
+  const [lines, setLines] = useState([])
+  useEffect(() => {
+    const newLines = []
+    for (let i = 0; i < points.length - 1; i++) {
+      newLines.push(
+        <line key={i} x1={points[i].x} y1={points[i].y} x2={points[i + 1].x} y2={points[i + 1].y} stroke="black" strokeWidth={1} />
+      )
+      setLines(newLines)
+    }
+  }, [points])
+
+
+  return (<g>{lines}</g>)
 }
 
 export default Edge

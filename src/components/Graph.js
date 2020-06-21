@@ -2,6 +2,7 @@ import React, {useState, useEffect} from 'react'
 import Node from './Node'
 import Edge from './Edge'
 import Community from './Community'
+import dagre from 'dagre'
 
 
 const getRandomInt = (min, max) => {
@@ -12,46 +13,45 @@ const getRandomInt = (min, max) => {
 
 const Graph = ({dataset}) => {
 
-  const [vertexes, setVertexes] = useState(new Map())
-  const [edges, setEdges] = useState(new Map())
+  const [vertexes, setVertexes] = useState([])
+  const [edges, setEdges] = useState([])
   const [plexes, setPlexes] = useState([])
 
+  const g = new dagre.graphlib.Graph()
+
   useEffect(() => {
-    const newVertexes = new Map()
-    const newEdges = new Map()
-    dataset.vertexes.forEach(vertex => {
-      newVertexes.set(vertex, {
-        x: getRandomInt(5, 158),
-        y: getRandomInt(5, 88),
-        label: vertex
-      })
+
+    g.setGraph({})
+    g.setDefaultEdgeLabel(function() { return {}; });
+
+    dataset.vertexes.forEach(v => {
+      g.setNode(v, { label: v, width: 30, height: 30})
     })
+    dataset.edges.forEach(e => {
+      const [first, second] = e.split('-')
+      g.setEdge(first, second)
+    })
+
+    dagre.layout(g, {nodesep: 5, edgesep: 1, ranksep: 5, ranker: 'tight-tree'})
+
+    const newVertexes = g.nodes().map((v) => g.node(v))
     setVertexes(newVertexes)
-
-    dataset.edges.forEach(edge => {
-      const [first, second] = edge.split('-')
-      const { x: x1, y: y1 } = newVertexes.get(parseInt(first))
-      const { x: x2, y: y2 } = newVertexes.get(parseInt(second))
-      newEdges.set(edge, { x1, y1, x2, y2, key: edge })
-    })
+    const newEdges = g.edges().map((e) => g.edge(e))
     setEdges(newEdges)
-
-    dataset.plexes.forEach((plex) => {
-      plexes.push(plex.map(node => newVertexes.get(node)))
-    })
-    setPlexes(plexes)
+    setPlexes(dataset.plexes.map(plexe => plexe.map(p => g.node(p)) ) )
   }, [dataset])
 
   return (
-    <svg viewBox="0 0 162 92" width="100%" height="100%">
+    <svg viewBox={`0 0 4695 2830`} width="100%" height="100%">
       {plexes.map((plex, i) =>
         <Community key={i} nodes={plex} />
       )}
-      {[...edges.values()].map(({key, ...rest}) =>
-        <Edge key={key} {...rest} />
+      {console.log(g)}
+      {edges.map(({key, ...rest}, index) =>
+        <Edge key={index} {...rest} />
       )}
-      {[...vertexes.values()].map(({label, x, y}) =>
-        <Node key={label} label={label} x={x} y={y} size={2}/>
+      {vertexes.map(({label, x, y}) =>
+        <Node key={label} label={label} x={x} y={y} size={30}/>
       )}
     </svg>
   )
