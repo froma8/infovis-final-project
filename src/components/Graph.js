@@ -1,4 +1,5 @@
 import React, { useState, useEffect } from 'react'
+import styled from 'styled-components'
 import Node from './Node'
 import Edge from './Edge'
 import Community from './Community'
@@ -35,18 +36,26 @@ const Graph = ({ dataset }) => {
   }, [])
 
   return (
-    <>
+    <Container>
       <svg viewBox="0 0 1920 900" width="100%" height="100%">
-      {[...edges.values()].map(({ key, ...rest }) =>
-        <Edge key={key} {...rest} />
-      )}
-      {[...vertexes.values()].map(({ label, x, y }) =>
-        <Node key={label} label={label} x={x} y={y} size={15} />
-      )}
-    </svg>
-    <div id='cy'></div>
-    </>
+        {[...edges.values()].map(({ key, ...rest }) =>
+          <Edge key={key} {...rest} />
+        )}
+        {[...vertexes.values()].map(({ label, x, y }) =>
+          <Node key={label} label={label} x={x} y={y} size={15} />
+        )}
+      </svg>
+    </Container>
   )
 }
 
 export default Graph
+
+const Container = styled.div`
+  position: absolute;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  left: 0;
+  z-index: 9999;
+`

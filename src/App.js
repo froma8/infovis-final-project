@@ -1,14 +1,27 @@
 import React from 'react'
-import graph from './data/dolphins.json'
-import Graph from './components/Graph'
-
+import styled from 'styled-components'
+import Menu from './components/Menu'
+import DrawingArea from './components/DrawingArea'
 
 const App = () => {
   return (
-    <Graph
-      dataset={graph}
-    />
+    <Container>
+      <Menu />
+      <DrawingArea />
+    </Container>
   )
 }
 
 export default App
+
+//region Style
+
+const Container = styled.div`
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  flex-direction: row;
+  align-items: flex-start;
+`
+
+//endregion
