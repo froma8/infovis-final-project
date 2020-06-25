@@ -11,25 +11,27 @@ const Graph = ({ dataset }) => {
   const [plexes, setPlexes] = useState([])
 
   useEffect(() => {
-    const vertexesCoordinates = getCoordinates(dataset)
-    setVertexes(vertexesCoordinates)
+    getCoordinates(dataset)
+      .then(vertexesCoordinates => {
+        setVertexes(vertexesCoordinates)
 
-    const newEdges = new Map()
-    dataset.edges.forEach(edge => {
-      const [first, second] = edge.split('-')
-      const nodeA = vertexesCoordinates.get(first)
-      const nodeB = vertexesCoordinates.get(second)
-      if (nodeA && nodeB) {
-        newEdges.set(edge, { x1: nodeA.x, y1: nodeA.y, x2: nodeB.x, y2: nodeB.y, key: edge })
-      }
-    })
-    setEdges(newEdges)
+        const newEdges = new Map()
+        dataset.edges.forEach(edge => {
+          const [first, second] = edge.split('-')
+          const nodeA = vertexesCoordinates.get(first)
+          const nodeB = vertexesCoordinates.get(second)
+          if (nodeA && nodeB) {
+            newEdges.set(edge, { x1: nodeA.x, y1: nodeA.y, x2: nodeB.x, y2: nodeB.y, key: edge })
+          }
+        })
+        setEdges(newEdges)
+        const newPlexes = []
+        dataset.plexes.forEach((plex) => {
+          newPlexes.push(plex.map(node => vertexesCoordinates.get(node.toString())))
+        })
+        setPlexes(newPlexes)
 
-    dataset.plexes.forEach((plex) => {
-      plexes.push(plex.map(node => vertexesCoordinates.get(node)))
-    })
-    setPlexes(plexes)
-
+      })
   }, [])
 
   return (
