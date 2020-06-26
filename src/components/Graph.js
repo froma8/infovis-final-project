@@ -10,8 +10,12 @@ const Graph = ({ dataset }) => {
   const [vertexes, setVertexes] = useState(new Map())
   const [edges, setEdges] = useState(new Map())
   const [plexes, setPlexes] = useState([])
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
 
   useEffect(() => {
+    const { width, height } = document.getElementById('cy').getBoundingClientRect()
+    setDimensions({ width, height })
+
     getCoordinates(dataset)
       .then(vertexesCoordinates => {
         setVertexes(vertexesCoordinates)
@@ -37,7 +41,7 @@ const Graph = ({ dataset }) => {
 
   return (
     <Container>
-      <svg viewBox="0 0 1920 900" width="100%" height="100%">
+      <svg viewBox={`0 0 ${dimensions.width} ${dimensions.height}`} width="100%" height="100%">
         {[...edges.values()].map(({ key, ...rest }) =>
           <Edge key={key} {...rest} />
         )}
