@@ -5,9 +5,9 @@ cytoscape.use(cola)
 
 export const getCoordinates = dataset => {
   return new Promise(resolve => {
-    let plexesNodes = [...new Set(dataset.plexes.flat())].map(node => node.toString())
+    let communitiesNodes = [...new Set(dataset.communities.flat())].map(node => node.toString())
 
-    const nodes = plexesNodes.map((vertex) => {
+    const nodes = communitiesNodes.map((vertex) => {
       return {
         data: {id: vertex}
       }
@@ -15,7 +15,7 @@ export const getCoordinates = dataset => {
 
     const edges = dataset.edges.map((edge) => {
       const [source, target] = edge.split('-')
-      if (plexesNodes.includes(source) && plexesNodes.includes(target)) {
+      if (communitiesNodes.includes(source) && communitiesNodes.includes(target)) {
         return {
           data: {id: edge, source, target}
         }

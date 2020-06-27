@@ -7,9 +7,9 @@ import { getCoordinates } from '../helpers'
 
 const Graph = ({ dataset }) => {
 
-  const [vertexes, setVertexes] = useState(new Map())
+  const [nodes, setNodes] = useState(new Map())
   const [edges, setEdges] = useState(new Map())
-  const [plexes, setPlexes] = useState([])
+  const [communities, setCommunities] = useState([])
   const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
 
   useEffect(() => {
@@ -17,24 +17,24 @@ const Graph = ({ dataset }) => {
     setDimensions({ width, height })
 
     getCoordinates(dataset)
-      .then(vertexesCoordinates => {
-        setVertexes(vertexesCoordinates)
+      .then(nodesCoordinates => {
+        setNodes(nodesCoordinates)
 
         const newEdges = new Map()
         dataset.edges.forEach(edge => {
           const [first, second] = edge.split('-')
-          const nodeA = vertexesCoordinates.get(first)
-          const nodeB = vertexesCoordinates.get(second)
+          const nodeA = nodesCoordinates.get(first)
+          const nodeB = nodesCoordinates.get(second)
           if (nodeA && nodeB) {
             newEdges.set(edge, { x1: nodeA.x, y1: nodeA.y, x2: nodeB.x, y2: nodeB.y, key: edge })
           }
         })
         setEdges(newEdges)
-        const newPlexes = []
-        dataset.plexes.forEach((plex) => {
-          newPlexes.push(plex.map(node => vertexesCoordinates.get(node.toString())))
+        const newCommunities = []
+        dataset.communities.forEach((plex) => {
+          newCommunities.push(plex.map(node => nodesCoordinates.get(node.toString())))
         })
-        setPlexes(newPlexes)
+        setCommunities(newCommunities)
 
       })
   }, [])
@@ -45,7 +45,7 @@ const Graph = ({ dataset }) => {
         {[...edges.values()].map(({ key, ...rest }) =>
           <Edge key={key} {...rest} />
         )}
-        {[...vertexes.values()].map(({ label, x, y }) =>
+        {[...nodes.values()].map(({ label, x, y }) =>
           <Node key={label} label={label} x={x} y={y} size={15} />
         )}
       </svg>
