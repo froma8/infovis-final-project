@@ -3,8 +3,15 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
+import { loadGraph } from './actions'
 import store from './configureStore'
+import dataset from './data/dolphins.json'
 
+document.addEventListener('DOMContentLoaded', (event) => {
+  if (process.env.REACT_APP_PRE_LOAD) {
+    store.dispatch(loadGraph(dataset))
+  }
+})
 
 ReactDOM.render(
   <React.StrictMode>
