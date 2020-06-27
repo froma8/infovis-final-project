@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { SELECT_NODE } from '../actions/types'
+import { SELECT_NODE, SELECT_COMMUNITIES } from '../actions/types'
 
 
 const selectedNode = ( state = null, { type, data }) => {
@@ -11,6 +11,15 @@ const selectedNode = ( state = null, { type, data }) => {
   }
 }
 
+const selectedCommunities = ( state = null, { type, data }) => {
+  switch (type) {
+    case SELECT_COMMUNITIES:
+      return data
+    default:
+      return state
+  }
+}
+
 export default combineReducers({
-  selectedNode
+  selectedNode, selectedCommunities
 })
