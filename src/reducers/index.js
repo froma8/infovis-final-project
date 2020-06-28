@@ -5,7 +5,7 @@ export const getSelectedNode = state => state.graph.selectedNode
 export const getNodes = state => state.graph.nodes
 export const getEdges = state => state.graph.edges
 export const getCommunities = state => state.graph.communities
-export const getselectedCommunities = state => state.graph.selectedCommunities
+export const getSelectedCommunities = state => state.graph.selectedCommunities
 
 export default combineReducers({
   graph
