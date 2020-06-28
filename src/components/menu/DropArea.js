@@ -2,24 +2,37 @@ import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { useDropzone } from 'react-dropzone'
 import { connect } from 'react-redux'
-import { loadGraph } from '../actions'
+import { loadGraph } from '../../actions'
 const { isArray } = Array
 
-
-const getColor = (props) => {
-  if (props.isDragAccept) {
+const getBackgroundColor = ({isDragAccept, isDragReject, isDragActive}) => {
+  if (isDragAccept) {
     return '#00e676';
   }
-  if (props.isDragReject) {
+  if (isDragReject) {
     return '#ff1744';
   }
-  if (props.isDragActive) {
+  if (isDragActive) {
     return '#2196f3';
   }
-  return '#4fa2bb';
+  return '#FAFAFA';
 }
 
-const Menu = ({ loadGraph }) => {
+const getColor = ({isDragAccept, isDragReject, isDragActive}) => {
+  if (isDragAccept || isDragReject || isDragActive) {
+    return '#FFFFFF';
+  }
+  return '#727272';
+}
+
+const getBorderColor = ({isDragAccept, isDragReject, isDragActive}) => {
+  if (isDragAccept || isDragReject || isDragActive) {
+    return '#FFFFFF';
+  }
+  return '#9c9c9c';
+}
+
+const DropArea = () => {
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0]
@@ -48,6 +61,7 @@ const Menu = ({ loadGraph }) => {
     reader.readAsText(file)
   }, [])
 
+
   const {
     acceptedFiles,
     getRootProps,
@@ -58,44 +72,29 @@ const Menu = ({ loadGraph }) => {
   } = useDropzone({accept: ['application/json'], onDrop})
 
   return (
-    <Container>
-      <DropArea
-        {...getRootProps({isDragActive, isDragAccept, isDragReject})}
-      >
-        <input {...getInputProps()} />
-        Load Graph +
-      </DropArea>
+    <Container
+      {...getRootProps({isDragActive, isDragAccept, isDragReject})}
+    >
+      <input {...getInputProps()} />
+      Click or drag to load
     </Container>
   )
 }
 
-export default connect(null, { loadGraph })(Menu)
+export default connect(null, { loadGraph })(DropArea)
 
 //region Style
 
 const Container = styled.div`
-  box-sizing: border-box;
-  width: 300px;
-  background: #ececec;
-  height: 100%;
-  padding: 10px 15px;
-`
-
-const Title = styled.div`
-  font-size: 1.2rem;
-  opacity: 0.85;
-  margin: 2px 0 5px 7px;
-`
-
-const DropArea = styled.div`
-  background: ${props => getColor(props)};
+  background: ${props => getBackgroundColor(props)};
   display: flex;
   flex-direction: row;
   align-items: center;
   justify-content: center;
-  color: #FFFFFF;
+  color: ${props => getColor(props)};
   font-size: 1.2rem;
-  border-radius: 20px;
+  border-radius: 10px;
+  border: 2px dashed ${props => getBorderColor(props)};
   padding: 15px 10px;
   &:focus {
     outline: none;

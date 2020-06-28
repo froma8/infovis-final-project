@@ -1,6 +1,6 @@
 import React from 'react'
 import styled from 'styled-components'
-import Menu from './components/Menu'
+import Menu from './components/menu/Menu'
 import DrawingArea from './components/DrawingArea'
 
 const App = () => {
