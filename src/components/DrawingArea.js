@@ -1,19 +1,34 @@
-import React from 'react'
+import React, { useState, useEffect } from 'react'
 import styled from 'styled-components'
-import graph from '../data/dolphins.json'
-import Graph from './Graph'
+import GlobalGraph from './GlobalGraph'
+import Communities from './Communities'
+import { connect } from 'react-redux'
+import { getSelectedNode } from '../reducers'
 
+const mapStateToProps = state => ({
+  selectedNode: getSelectedNode(state)
+})
 
-const DrawingArea = () => {
+const DrawingArea = ({ selectedNode }) => {
+  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
+
+  useEffect(() => {
+    const { width, height } = document.getElementById('cy').getBoundingClientRect()
+    setDimensions({ width, height })
+  }, [])
+
   return (
     <Container>
-      <Graph dataset={graph} />
+      {selectedNode
+        ? (<Communities width={dimensions.width} height={dimensions.height} />)
+        : (<GlobalGraph width={dimensions.width} height={dimensions.height} />)
+      }
       <Cytoscape id="cy" />
     </Container>
   )
 }
 
-export default DrawingArea
+export default connect(mapStateToProps)(DrawingArea)
 
 //region Style
 
