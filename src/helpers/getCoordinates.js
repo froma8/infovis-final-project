@@ -35,7 +35,6 @@ export const getCoordinates = dataset => {
           })
         }
       })
-      console.log(vertexes)
       return resolve(vertexes)
     }
 
