@@ -1,18 +1,26 @@
 import React from 'react'
 import styled from 'styled-components'
 import DropArea from './DropArea'
+import Filters from './Filters'
+import { connect } from 'react-redux'
+import { getSelectedCommunities } from '../../reducers'
 
 
-const Menu = () => {
+const mapStateToProps = state => ({
+  selectedCommunities: getSelectedCommunities(state)
+})
+
+const Menu = ({ selectedCommunities }) => {
 
   return (
     <Container>
       <DropArea />
+      { selectedCommunities && <Filters selectedCommunities={selectedCommunities}/> }
     </Container>
   )
 }
 
-export default Menu
+export default connect(mapStateToProps)(Menu)
 
 //region Style
 

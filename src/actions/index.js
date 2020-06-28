@@ -41,3 +41,5 @@ export const selectCommunities = data => {
   })
   return { type: t.SELECT_COMMUNITIES, data: communities }
 }
+
+export const applyFilters = data => ({ type: t.APPLY_FILTERS, data })

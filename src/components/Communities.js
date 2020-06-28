@@ -4,25 +4,20 @@ import { connect } from 'react-redux'
 import Graph from './Graph'
 import styled from 'styled-components'
 
+
 const mapStateToProps = state => ({
   selectedCommunities: getSelectedCommunities(state),
   selectedNode: getSelectedNode(state)
 })
 
-const getCommunityHeight = communityNodes => {
-  const sortedNodes = [...communityNodes].sort((a, b) => a.y - b.y)
-  const min = sortedNodes[0].y
-  const max = sortedNodes[sortedNodes.length - 1].y
-  return max - min
-}
-
 const Communities = ({ width, height, selectedCommunities, selectedNode }) => {
   const [communities, setCommunities] = useState([])
+  const [nodesX, setNodesX] = useState([])
   const [overallHeight, setOverallHeight] = useState(0)
 
   useEffect(() => {
     const newCommunities = [selectedCommunities[0]]
-
+    const nodesUnique = new Map()
     for (let i = 1; i < selectedCommunities.length; i++) {
       const prev = newCommunities[i - 1].nodes
       const curr = selectedCommunities[i].nodes
@@ -30,7 +25,7 @@ const Communities = ({ width, height, selectedCommunities, selectedNode }) => {
       const maxPrev = [...prev].sort((a, b) => b.y - a.y)[0]
       const minCurr = [...curr].sort((a, b) => a.y - b.y)[0]
       const partialOffset = selected.y - minCurr.y
-      const offset = maxPrev.y + partialOffset - 250
+      const offset = maxPrev.y + partialOffset
 
       const nodes = curr.map(node => ({ ...node, y: node.y + offset}))
       newCommunities.push({
@@ -42,12 +37,31 @@ const Communities = ({ width, height, selectedCommunities, selectedNode }) => {
         setOverallHeight(maxCurr.y + 10)
       }
     }
-    console.log(newCommunities)
     setCommunities(newCommunities)
+    newCommunities.forEach(community => {
+      community.nodes.forEach(node => {
+        const n = nodesUnique.get(node.label)
+        if (n) {
+          if (node.y <= n.minY) {
+            nodesUnique.set(n.label, { label: n.label, x: n.x, minY: node.y, maxY: n.maxY })
+          }
+          if (node.y >= n.maxY) {
+            nodesUnique.set(n.label, { label: n.label, x: n.x, minY: n.minY, maxY: node.y })
+          }
+        } else {
+          nodesUnique.set(node.label, { label: node.label, x: node.x, minY: node.y, maxY: node.y })
+        }
+      })
+    })
+    setNodesX([...nodesUnique.values()])
   }, [selectedCommunities])
+
   return (
     <Container>
       <svg viewBox={`0 0 ${width} ${overallHeight}`} width="100%" height={`${overallHeight}px`}>
+        {nodesX.map(node =>
+          <line key={node.label} x1={node.x} y1={node.minY} x2={node.x} y2={node.maxY} stroke="#000000" strokeWidth={0.3} strokeDasharray="4" />
+        )}
         {communities.map(({ nodes, edges }, index) =>
           <Graph key={index} nodes={nodes} edges={edges} />
         )}
