@@ -9,29 +9,32 @@ const mapStateToProps = state => ({
 })
 
 const getCommunityHeight = communityNodes => {
-  const min = [...communityNodes].sort((a, b) => a.y - b.y)[0].y
-  const max = [...communityNodes].sort((a, b) => b.y - a.y)[0].y
-  return max - min + 100
+  const sortedNodes = [...communityNodes].sort((a, b) => a.y - b.y)
+  const min = sortedNodes[0].y
+  const max = sortedNodes[sortedNodes.length - 1].y
+  return max - min + 200
 }
 
 const Communities = ({ width, height, selectedCommunities }) => {
   const [communities, setCommunities] = useState([])
-  let overallHeight = 0
-  selectedCommunities.forEach(community => {
-    overallHeight += getCommunityHeight(community.nodes)
-  })
-  console.log(overallHeight)
+  const [overallHeight, setOverallHeight] = useState(0)
   useEffect(() => {
-    setCommunities(selectedCommunities.map((community, i) => {
-      const multiplier = getCommunityHeight(community.nodes)
-      const nodes = community.nodes.map(node => ({ ...node, y: node.y + (i * multiplier) }))
-      const edges = community.edges.map(edge => ({ ...edge, y1: edge.y1 + (i * multiplier), y2: edge.y2 + (i * multiplier) }))
+    let multiplier = 0
+    setCommunities(selectedCommunities.map((community) => {
+      console.log('----------------------------------')
+      const nodes = community.nodes.map(node => {
+        console.log(node.y + multiplier)
+        return { ...node, y: node.y + multiplier }
+      })
+      const edges = community.edges.map(edge => ({ ...edge, y1: edge.y1 + multiplier, y2: edge.y2 + multiplier }))
+      multiplier += getCommunityHeight(community.nodes)
       return { nodes, edges }
     }))
+    setOverallHeight(multiplier)
   }, [selectedCommunities])
   return (
     <Container>
-      <svg viewBox={`0 0 ${width} ${overallHeight}`} width="100%" height="100%">
+      <svg viewBox={`0 0 ${width} ${overallHeight}`} width="100%" height={`${overallHeight}px`}>
         {communities.map(({ nodes, edges }, index) =>
           <Graph key={index} nodes={nodes} edges={edges} />
         )}
@@ -49,4 +52,5 @@ const Container = styled.div`
   bottom: 0;
   left: 0;
   z-index: 9999;
+  overflow-y: auto;
 `
