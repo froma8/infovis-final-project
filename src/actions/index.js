@@ -28,6 +28,9 @@ export const loadGraph = (data) => (dispatch) => {
 }
 
 export const selectCommunities = data => {
+  if (!data) {
+    return { type: t.SELECT_COMMUNITIES, data: null }
+  }
   //forse dovrei tener conto dei filtri
   const label = data.label
   const graphEdges = data.edges
@@ -41,3 +44,5 @@ export const selectCommunities = data => {
   })
   return { type: t.SELECT_COMMUNITIES, data: communities }
 }
+
+export const applyFilters = data => ({ type: t.APPLY_FILTERS, data })

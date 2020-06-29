@@ -1,3 +1,4 @@
 export const SELECT_NODE = 'SELECT_NODE'
 export const LOAD_GRAPH = 'LOAD_GRAPH'
 export const SELECT_COMMUNITIES = 'SELECT_COMMUNITIES'
+export const APPLY_FILTERS = 'APPLY_FILTERS'
