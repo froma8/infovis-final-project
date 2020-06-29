@@ -1,9 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { getSelectedCommunities, getSelectedNode, getFilters, getNodes } from '../reducers'
+import { getSelectedCommunities, getFilters } from '../reducers'
 import { connect } from 'react-redux'
 import Graph from './Graph'
 import styled from 'styled-components'
-
 
 const COMMUNITIES_DISTANCE = 150
 const SCALE_Y_FACTOR = 0.7
@@ -21,7 +20,7 @@ const isBetweenMinMax = (filters, nodes) => {
   }
 }
 
-const Communities = ({ width, selectedCommunities, filters }) => {
+const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
   const [communities, setCommunities] = useState([])
   const [nodesX, setNodesX] = useState([])
   const [overallHeight, setOverallHeight] = useState(0)
@@ -41,7 +40,7 @@ const Communities = ({ width, selectedCommunities, filters }) => {
       const curr = filteredCommunities[i].nodes
       const maxPrev = [...prev].sort((a, b) => b.y - a.y)[0]
       const minCurr = [...curr].sort((a, b) => a.y - b.y)[0]
-      const offset = maxPrev.y - minCurr.y + 150
+      const offset = maxPrev.y - minCurr.y + COMMUNITIES_DISTANCE
       const nodes = curr.map(node => ({ ...node, y: node.y + offset }))
       newCommunities.push({
         nodes,
