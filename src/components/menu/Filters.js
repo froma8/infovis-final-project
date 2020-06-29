@@ -2,9 +2,10 @@ import React, {useEffect, useState} from 'react'
 import styled from 'styled-components'
 import InputRange from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
+import { applyFilters } from '../../actions'
+import { connect } from 'react-redux'
 
-
-const Filters = ({ selectedCommunities }) => {
+const Filters = ({ selectedCommunities, applyFilters }) => {
 
   const [ value, setValue ] = useState({ min: 0, max: 10 })
   const [ min, setMin ] = useState(0)
@@ -29,14 +30,14 @@ const Filters = ({ selectedCommunities }) => {
         maxValue={max}
         step={1}
         onChange={(x) => setValue(x)}
-        onChangeComplete={x => console.log(x)}
+        onChangeComplete={x => applyFilters(x)}
         value={value}
       />
     </Container>
   )
 }
 
-export default Filters
+export default connect(null, { applyFilters })(Filters)
 
 //region Style
 

@@ -20,7 +20,7 @@ const DrawingArea = ({ selectedNode }) => {
   return (
     <Container>
       {selectedNode
-        ? (<Communities width={dimensions.width} height={dimensions.height} />)
+        ? (<Communities width={dimensions.width} />)
         : (<GlobalGraph width={dimensions.width} height={dimensions.height} />)
       }
       <Cytoscape id="cy" />
