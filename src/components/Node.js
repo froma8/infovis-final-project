@@ -15,11 +15,23 @@ const selectNodeAndCommunities = (label, selectNode, selectCommunities, edges, c
   selectCommunities({ label, edges, communities })
 }
 
-const Node = ({ x, y, size = 2, label, selectedNode, selectNode, selectCommunities, edges, communities }) => {
+const Node = ({ x, y, size = 2, label, selectedNode, selectNode, selectCommunities, edges, communities, compressed }) => {
   return (
-    <g onClick={() => selectNodeAndCommunities(label, selectNode, selectCommunities, edges, communities)} >
-      <ellipse cx={x} cy={y} rx={size} ry={size} fill={selectedNode === label ? 'red' : 'black'} />
-      <text x={x} y={y + 4.5} fill="white" textAnchor="middle" style={{ fontSize: '1rem' }}>{label}</text>
+    <g style={{ cursor: 'pointer'}} onClick={() => selectNodeAndCommunities(label, selectNode, selectCommunities, edges, communities)} >
+      <ellipse
+        cx={x}
+        cy={y}
+        rx={size}
+        ry={compressed ? size * 0.7 : size}
+        fill={selectedNode === label ? 'red' : 'black'}
+      />
+      <text
+        x={x}
+        y={compressed ? y + 5 : y + 4.5}
+        fill="white"
+        textAnchor="middle"
+        style={{ fontSize: compressed ? '0.85rem' : '1rem'}}
+      >{label}</text>
     </g>
   )
 }

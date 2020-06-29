@@ -1,44 +1,47 @@
 import React, { useState, useEffect } from 'react'
-import { getSelectedCommunities, getSelectedNode, getFilters } from '../reducers'
+import { getSelectedCommunities, getSelectedNode, getFilters, getNodes } from '../reducers'
 import { connect } from 'react-redux'
 import Graph from './Graph'
 import styled from 'styled-components'
 
 
+const COMMUNITIES_DISTANCE = 150
+const SCALE_Y_FACTOR = 0.7
+
 const mapStateToProps = state => ({
   selectedCommunities: getSelectedCommunities(state),
-  selectedNode: getSelectedNode(state),
   filters: getFilters(state)
 })
 
-const visualize_community = (filters, nodes) => {
+const isBetweenMinMax = (filters, nodes) => {
   if (filters.min && filters.max) {
-    if (filters.min <= nodes.length && filters.max >= nodes.length) {
-      return true
-    } else return false
+    return filters.min <= nodes.length && filters.max >= nodes.length;
   } else {
     return true
   }
 }
 
-const Communities = ({ width, selectedCommunities, selectedNode, filters }) => {
+const Communities = ({ width, selectedCommunities, filters }) => {
   const [communities, setCommunities] = useState([])
   const [nodesX, setNodesX] = useState([])
   const [overallHeight, setOverallHeight] = useState(0)
 
   useEffect(() => {
-    const filteredCommunities = [...selectedCommunities].filter(({ nodes }) => visualize_community(filters, nodes))
+    // Applies filters on communities and scales nodes and edges coordinates
+    const filteredCommunities = [...selectedCommunities]
+      .filter(({ nodes }) => isBetweenMinMax(filters, nodes))
+      .map(({ nodes, edges }) => ({
+        nodes: nodes.map(n => ({...n, y: n.y * SCALE_Y_FACTOR})),
+        edges: edges.map(e => ({...e, y1: e.y1 * SCALE_Y_FACTOR, y2: e.y2 * SCALE_Y_FACTOR}))
+      }))
     let newCommunities = [filteredCommunities[0]]
     const nodesUnique = new Map()
     for (let i = 1; i < filteredCommunities.length; i++) {
       const prev = newCommunities[i - 1].nodes
       const curr = filteredCommunities[i].nodes
-      const selected = curr.find(n => n.label === selectedNode)
       const maxPrev = [...prev].sort((a, b) => b.y - a.y)[0]
       const minCurr = [...curr].sort((a, b) => a.y - b.y)[0]
-      const partialOffset = selected.y - minCurr.y
-      const offset = maxPrev.y + partialOffset
-
+      const offset = maxPrev.y - minCurr.y + 150
       const nodes = curr.map(node => ({ ...node, y: node.y + offset }))
       newCommunities.push({
         nodes,
@@ -73,7 +76,7 @@ const Communities = ({ width, selectedCommunities, selectedNode, filters }) => {
           <line key={node.label} x1={node.x} y1={node.minY} x2={node.x} y2={node.maxY} stroke="#000000" strokeWidth={0.3} strokeDasharray="4" />
         )}
         {communities.map(({ nodes, edges }, index) =>
-          <Graph key={index} nodes={nodes} edges={edges} />
+          <Graph key={index} nodes={nodes} edges={edges} compressed />
         )}
       </svg>
     </ Container>
