@@ -32,7 +32,7 @@ const getBorderColor = ({isDragAccept, isDragReject, isDragActive}) => {
   return '#9c9c9c';
 }
 
-const DropArea = () => {
+const DropArea = ({ loadGraph }) => {
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0]
