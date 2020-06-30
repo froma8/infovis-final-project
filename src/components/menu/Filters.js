@@ -1,4 +1,4 @@
-import React, {useEffect, useState} from 'react'
+import React, { useEffect, useState } from 'react'
 import styled from 'styled-components'
 import InputRange from 'react-input-range'
 import 'react-input-range/lib/css/index.css'
@@ -7,12 +7,12 @@ import { connect } from 'react-redux'
 
 const Filters = ({ selectedCommunities, applyFilters }) => {
 
-  const [ value, setValue ] = useState({ min: 0, max: 10 })
-  const [ min, setMin ] = useState(0)
-  const [ max, setMax ] = useState(0)
+  const [value, setValue] = useState({ min: 0, max: 10 })
+  const [min, setMin] = useState(0)
+  const [max, setMax] = useState(0)
 
   useEffect(() => {
-    const nodesLengths = selectedCommunities.map(c => c.nodes).map(n => n.length).sort()
+    const nodesLengths = selectedCommunities.map(c => c.nodes).map(n => n.length).sort((a, b) => a - b)
     const minValue = nodesLengths[0]
     const maxValue = nodesLengths[nodesLengths.length - 1]
     setValue({ min: minValue, max: maxValue })
