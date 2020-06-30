@@ -25,14 +25,21 @@ const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
   const [nodesX, setNodesX] = useState([])
   const [overallHeight, setOverallHeight] = useState(0)
 
+  const setDefaultValues = () => {
+    setOverallHeight(0)
+    setCommunities([])
+    setNodesX([])
+  }
+
   useEffect(() => {
     // Applies filters on communities and scales nodes and edges coordinates
     const filteredCommunities = [...selectedCommunities]
       .filter(({ nodes }) => isBetweenMinMax(filters, nodes))
       .map(({ nodes, edges }) => ({
-        nodes: nodes.map(n => ({...n, y: n.y * SCALE_Y_FACTOR})),
-        edges: edges.map(e => ({...e, y1: e.y1 * SCALE_Y_FACTOR, y2: e.y2 * SCALE_Y_FACTOR}))
+        nodes: nodes.map(n => ({ ...n, y: n.y * SCALE_Y_FACTOR })),
+        edges: edges.map(e => ({ ...e, y1: e.y1 * SCALE_Y_FACTOR, y2: e.y2 * SCALE_Y_FACTOR }))
       }))
+    if (filteredCommunities.length === 0) return setDefaultValues()
     let newCommunities = [filteredCommunities[0]]
     const nodesUnique = new Map()
     for (let i = 1; i < filteredCommunities.length; i++) {
