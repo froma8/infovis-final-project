@@ -2,6 +2,8 @@ import React, { useState, useEffect } from 'react'
 import { getSelectedCommunities, getFilters } from '../reducers'
 import { connect } from 'react-redux'
 import Graph from './Graph'
+import GraphContainer from './GraphContainer'
+import GraphShadow from './GraphShadow'
 import styled from 'styled-components'
 
 const COMMUNITIES_DISTANCE = 150
@@ -21,7 +23,7 @@ const isBetweenMinMax = (filters, nodes) => {
   }
 }
 
-const scaleValue = (value, from, to=[DEFAULT_NODE_SIZE, DEFAULT_NODE_SIZE * 1.35]) => {
+const scaleValue = (value, from, to = [DEFAULT_NODE_SIZE, DEFAULT_NODE_SIZE * 1.35]) => {
   var scale = (to[1] - to[0]) / (from[1] - from[0]);
   var capped = Math.min(from[1], Math.max(from[0], value)) - from[0];
   return ~~(capped * scale + to[0]);
@@ -47,7 +49,7 @@ const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
         const minY = sortedNodes[0].y
         const maxY = sortedNodes[sortedNodes.length - 1].y
         let nodesComputed = nodes.map(n => {
-          return { ...n, y: n.y * SCALE_Y_FACTOR, size: scaleValue(n.y, [minY, maxY])}
+          return { ...n, y: n.y * SCALE_Y_FACTOR, size: scaleValue(n.y, [minY, maxY]) }
         })
         return {
           nodes: nodesComputed,
@@ -71,7 +73,7 @@ const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
       })
     }
     const maxCurr = [...newCommunities[newCommunities.length - 1].nodes].sort((a, b) => b.y - a.y)[0]
-    setOverallHeight(maxCurr.y + 10)
+    setOverallHeight(maxCurr.y + 50)
     setCommunities(newCommunities)
     newCommunities.forEach(community => {
       community.nodes.forEach(node => {
@@ -93,12 +95,16 @@ const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
 
   return (
     <Container>
-      <svg viewBox={`0 0 ${width} ${overallHeight}`} width="100%" height={`${overallHeight}px`}>
+      <svg viewBox={`0 0 ${width} ${overallHeight}`} width="100%" height={`${overallHeight + 150}px`}>
         {nodesX.map(node =>
           <line key={node.label} x1={node.x} y1={node.minY} x2={node.x} y2={node.maxY} stroke="#000000" strokeWidth={0.3} strokeDasharray="4" />
         )}
         {communities.map(({ nodes, edges }, index) =>
-          <Graph key={index} nodes={nodes} edges={edges} compressed />
+          <g key={index}>
+            <GraphContainer nodes={nodes} />
+            <GraphShadow nodes={nodes} />
+            <Graph nodes={nodes} edges={edges} compressed />
+          </g>
         )}
       </svg>
     </ Container>
