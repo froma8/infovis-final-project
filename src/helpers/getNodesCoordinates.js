@@ -1,18 +1,15 @@
 let seed = 1
 
-export default (nodes, edges, width, height) => {
+export default (graph, width, height) => {
+  let communitiesNodes = [...new Set(graph.communities.flat())].map(node => node.toString())
 
-  const resume = () => {
-    const k_el = 5
-    const k_springf = 1 / 400
-    const k_springl = 15
-    const gravity = 0.002
-    const iterations = 1000
+  const [nodes, edges] = mapData(communitiesNodes, graph.edges, width, height)
 
-    for (let k = 0; k < iterations; k++) {
-      mainStep(k_el, k_springf, k_springl, gravity)
-    }
-  }
+  const k_el = 10
+  const k_springf = 1 / 1000
+  const k_springl = 100
+  const gravity = 0.002
+  const iterations = 1000
 
   const mainStep = (k_e, k_sf, k_sl, gravity) => {
     // forze repulsive
@@ -74,6 +71,33 @@ export default (nodes, edges, width, height) => {
       nodes[j].dispy = 0
     }
   }
+
+  for (let k = 0; k < iterations; k++) {
+    mainStep(k_el, k_springf, k_springl, gravity)
+  }
+
+  return new Map(nodes.map(node => ([node.label, node])))
+}
+
+const mapData = (graphNodes, graphEdges, width, height) => {
+  
+  const nodes = graphNodes.map(graphNode => {
+    return {
+      x: random() * width,
+      y: random() * height,
+      dispx: 0,
+      dispy: 0,
+      links: 0,
+      label: graphNode.toString()
+    }
+  })
+
+  const edges = graphEdges.map(grapEdge => {
+    const [source, target] = grapEdge.split('-')
+    return { source: nodes.find(n => n.label === source), target: nodes.find(n => n.label === target) }
+  }).filter(edge => edge.source && edge.target)
+
+  return [nodes, edges]
 }
 
 const random = () => {

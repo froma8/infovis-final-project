@@ -5,7 +5,6 @@ import { getNodes, getEdges } from '../reducers'
 import Node from './Node'
 import Edge from './Edge'
 
-
 const mapStateToProps = state => ({
   nodes: getNodes(state),
   edges: getEdges(state)

@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { SELECT_NODE, LOAD_GRAPH, SELECT_COMMUNITIES } from '../actions/types'
+import { SELECT_NODE, LOAD_GRAPH, SELECT_COMMUNITIES, SET_DIMENSIONS } from '../actions/types'
 
 
 const selectedNode = ( state = null, { type, data }) => {
@@ -47,10 +47,30 @@ const communities = ( state = [], { type, data } ) => {
   }
 }
 
+const width = ( state = 0, { type, data } ) => {
+  switch (type) {
+    case SET_DIMENSIONS:
+      return data.width
+    default:
+      return state
+  }
+}
+
+const height = ( state = 0, { type, data } ) => {
+  switch (type) {
+    case SET_DIMENSIONS:
+      return data.height
+    default:
+      return state
+  }
+}
+
 export default combineReducers({
   selectedNode,
   nodes,
   edges,
   communities,
-  selectedCommunities
+  selectedCommunities,
+  width,
+  height
 })
