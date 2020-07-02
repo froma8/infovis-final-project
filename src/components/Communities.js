@@ -95,14 +95,14 @@ const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
 
   return (
     <Container>
-      <svg viewBox={`0 0 ${width} ${overallHeight}`} width="100%" height={`${overallHeight}px`}>
+      <svg viewBox={`0 0 ${width} ${overallHeight}`} width="100%" height={`${overallHeight + 150}px`}>
         {nodesX.map(node =>
           <line key={node.label} x1={node.x} y1={node.minY} x2={node.x} y2={node.maxY} stroke="#000000" strokeWidth={0.3} strokeDasharray="4" />
         )}
         {communities.map(({ nodes, edges }, index) =>
           <g key={index}>
             <GraphContainer nodes={nodes} />
-            <GraphShadow nodes={nodes} edges={edges} compressed />
+            <GraphShadow nodes={nodes} />
             <Graph nodes={nodes} edges={edges} compressed />
           </g>
         )}
