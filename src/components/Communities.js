@@ -72,7 +72,7 @@ const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
       })
     }
     const maxCurr = [...newCommunities[newCommunities.length - 1].nodes].sort((a, b) => b.y - a.y)[0]
-    setOverallHeight(maxCurr.y + 10)
+    setOverallHeight(maxCurr.y + 50)
     setCommunities(newCommunities)
     newCommunities.forEach(community => {
       community.nodes.forEach(node => {
@@ -100,8 +100,8 @@ const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
         )}
         {communities.map(({ nodes, edges }, index) =>
           <g key={index}>
-            <Graph nodes={nodes} edges={edges} compressed />
             <GraphContainer nodes={nodes} />
+            <Graph nodes={nodes} edges={edges} compressed />
           </g>
         )}
       </svg>
