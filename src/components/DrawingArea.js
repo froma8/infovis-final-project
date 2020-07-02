@@ -3,21 +3,18 @@ import styled from 'styled-components'
 import GlobalGraph from './GlobalGraph'
 import Communities from './Communities'
 import { connect } from 'react-redux'
-import { getSelectedNode } from '../reducers'
+import { getSelectedNode, getWidth, getHeight } from '../reducers'
 import { selectNode, selectCommunities } from '../actions'
 import imgBack from '../images/arrow.png'
 
 const mapStateToProps = state => ({
-  selectedNode: getSelectedNode(state)
+  selectedNode: getSelectedNode(state),
+  width: getWidth(state),
+  height: getHeight(state)
+
 })
 
-const DrawingArea = ({ selectedNode, selectNode, selectCommunities }) => {
-  const [dimensions, setDimensions] = useState({ width: 0, height: 0 })
-
-  useEffect(() => {
-    const { width, height } = document.getElementById('cy').getBoundingClientRect()
-    setDimensions({ width, height })
-  }, [])
+const DrawingArea = ({ selectedNode, selectNode, selectCommunities, width, height }) => {
 
   const goBack = () => {
     selectNode(null)
@@ -25,13 +22,12 @@ const DrawingArea = ({ selectedNode, selectNode, selectCommunities }) => {
   }
 
   return (
-    <Container>
+    <Container id='drawing-area'>
       {selectedNode
-        ? (<Communities width={dimensions.width} />)
-        : (<GlobalGraph width={dimensions.width} height={dimensions.height} />)
+        ? (<Communities width={width} />)
+        : (<GlobalGraph width={width} height={height} />)
       }
       { selectedNode && <Image src={imgBack} onClick={goBack}/>}
-      <Cytoscape id="cy" />
     </Container>
   )
 }
@@ -44,15 +40,6 @@ const Container = styled.div`
   width: 100%;
   height: 100%;
   position: relative;
-`
-
-const Cytoscape = styled.div`
-  position: absolute;
-  top: 0;
-  right: 0;
-  bottom: 0;
-  left: 0;
-  z-index: 1;
 `
 
 const Image = styled.img`
