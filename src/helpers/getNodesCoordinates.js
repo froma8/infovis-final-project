@@ -62,9 +62,6 @@ export default (graph, width, height) => {
       nodes[j].dispx -= (dist * gravity) * (distx / dist)  // sommo allo spostamento uno spostamento di gravità
       nodes[j].dispy -= (dist * gravity) * (disty / dist)
 
-      const x = nodes[j].x + nodes[j].dispx // come a e b no?
-      const y = nodes[j].y + nodes[j].dispy
-
       nodes[j].x += nodes[j].dispx
       nodes[j].y += nodes[j].dispy
       nodes[j].dispx = 0

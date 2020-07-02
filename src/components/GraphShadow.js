@@ -4,8 +4,9 @@ const GraphShadow = ({ nodes }) => {
   return (
     <>
       {
-        nodes.length && nodes.map(({ x, y, size }) =>
+        nodes.length && nodes.map(({ x, y, size }, index) =>
           <ellipse
+            key={index}
             cx={x}
             cy={y + 75}
             rx={size}

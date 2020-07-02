@@ -1,5 +1,4 @@
 import React from 'react'
-import '../css/graph.css'
 import { connect } from 'react-redux'
 import { getSelectedNode, getEdges, getCommunities } from '../reducers'
 import { selectNode, selectCommunities } from '../actions'

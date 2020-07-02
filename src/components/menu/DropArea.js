@@ -59,11 +59,10 @@ const DropArea = ({ loadGraph }) => {
     }
 
     reader.readAsText(file)
-  }, [])
+  }, [loadGraph])
 
 
   const {
-    acceptedFiles,
     getRootProps,
     getInputProps,
     isDragActive,
