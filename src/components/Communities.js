@@ -6,6 +6,7 @@ import styled from 'styled-components'
 
 const COMMUNITIES_DISTANCE = 150
 const SCALE_Y_FACTOR = 0.7
+const DEFAULT_NODE_SIZE = 15
 
 const mapStateToProps = state => ({
   selectedCommunities: getSelectedCommunities(state),
@@ -18,6 +19,12 @@ const isBetweenMinMax = (filters, nodes) => {
   } else {
     return true
   }
+}
+
+const scaleValue = (value, from, to=[DEFAULT_NODE_SIZE, DEFAULT_NODE_SIZE * 1.35]) => {
+  var scale = (to[1] - to[0]) / (from[1] - from[0]);
+  var capped = Math.min(from[1], Math.max(from[0], value)) - from[0];
+  return ~~(capped * scale + to[0]);
 }
 
 const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
@@ -35,10 +42,19 @@ const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
     // Applies filters on communities and scales nodes and edges coordinates
     const filteredCommunities = [...selectedCommunities]
       .filter(({ nodes }) => isBetweenMinMax(filters, nodes))
-      .map(({ nodes, edges }) => ({
-        nodes: nodes.map(n => ({ ...n, y: n.y * SCALE_Y_FACTOR })),
-        edges: edges.map(e => ({ ...e, y1: e.y1 * SCALE_Y_FACTOR, y2: e.y2 * SCALE_Y_FACTOR }))
-      }))
+      .map(({ nodes, edges }) => {
+        const sortedNodes = nodes.sort((a, b) => a.y - b.y)
+        const minY = sortedNodes[0].y
+        const maxY = sortedNodes[sortedNodes.length - 1].y
+        let nodesComputed = nodes.map(n => {
+          return { ...n, y: n.y * SCALE_Y_FACTOR, size: scaleValue(n.y, [minY, maxY])}
+        })
+        return {
+          nodes: nodesComputed,
+          edges: edges.map(e => ({ ...e, y1: e.y1 * SCALE_Y_FACTOR, y2: e.y2 * SCALE_Y_FACTOR }))
+        }
+      }
+      )
     if (filteredCommunities.length === 0) return setDefaultValues()
     let newCommunities = [filteredCommunities[0]]
     const nodesUnique = new Map()
