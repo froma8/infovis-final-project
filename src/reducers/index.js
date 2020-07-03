@@ -3,6 +3,7 @@ import graph from './graph'
 import filters from './filters'
 
 export const getSelectedNode = state => state.graph.selectedNode
+export const getRawGraph = state => state.graph.raw
 export const getNodes = state => state.graph.nodes
 export const getEdges = state => state.graph.edges
 export const getCommunities = state => state.graph.communities

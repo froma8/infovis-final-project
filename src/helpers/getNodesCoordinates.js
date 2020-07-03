@@ -1,15 +1,15 @@
 let seed = 1
 
-export default (graph, width, height) => {
+export default (graph, width, height, parameters) => {
   let communitiesNodes = [...new Set(graph.communities.flat())].map(node => node.toString())
 
   const [nodes, edges] = mapData(communitiesNodes, graph.edges, width, height)
 
-  const k_el = 10
-  const k_springf = 1 / 1000
-  const k_springl = 100
-  const gravity = 0.002
-  const iterations = 1000
+  const charge = parameters.charge
+  const linkStrength = parameters.linkStrength
+  const linkDistance = parameters.linkDistance
+  const gravity = parameters.gravity
+  const iterations = parameters.iterations
 
   const mainStep = (k_e, k_sf, k_sl, gravity) => {
     // forze repulsive
@@ -70,7 +70,7 @@ export default (graph, width, height) => {
   }
 
   for (let k = 0; k < iterations; k++) {
-    mainStep(k_el, k_springf, k_springl, gravity)
+    mainStep(charge, linkStrength, linkDistance, gravity)
   }
 
   return new Map(nodes.map(node => ([node.label, node])))

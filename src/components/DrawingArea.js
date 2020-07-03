@@ -21,7 +21,7 @@ const mapStateToProps = state => ({
 
 const DrawingArea = ({ selectedNode, selectNode, selectCommunities, width, height }) => {
 
-  const [ showModal, setShowModal ] = useState(true)
+  const [ showModal, setShowModal ] = useState(false)
 
   const goBack = () => {
     selectNode(null)

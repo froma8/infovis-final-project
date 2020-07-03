@@ -1,5 +1,5 @@
 import { combineReducers } from 'redux'
-import { SELECT_NODE, LOAD_GRAPH, SELECT_COMMUNITIES, SET_DIMENSIONS, SET_PARAMETERS } from '../actions/types'
+import { SELECT_NODE, LOAD_GRAPH, SELECT_COMMUNITIES, SET_DIMENSIONS, SET_PARAMETERS, LOAD_RAW_GRAPH } from '../actions/types'
 
 const defaultParameters = {
   charge: 10,
@@ -21,6 +21,15 @@ const selectedNode = ( state = null, { type, data }) => {
 const selectedCommunities = ( state = null, { type, data }) => {
   switch (type) {
     case SELECT_COMMUNITIES:
+      return data
+    default:
+      return state
+  }
+}
+
+const raw = ( state = {}, { type, data } ) => {
+  switch (type) {
+    case LOAD_RAW_GRAPH:
       return data
     default:
       return state
@@ -83,6 +92,7 @@ const parameters = ( state = {...defaultParameters}, { type, data } ) => {
 
 export default combineReducers({
   selectedNode,
+  raw,
   nodes,
   edges,
   communities,

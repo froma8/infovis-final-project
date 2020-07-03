@@ -2,13 +2,13 @@ import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
 import { getParameters } from '../reducers'
-
+import { setParameters, loadGraph } from '../actions'
 
 const mapStateToProps = state => ({
   parameters: getParameters(state)
 })
 
-const GraphParameters = ({ parameters, closeModal }) => {
+const GraphParameters = ({ parameters, closeModal, setParameters, loadGraph }) => {
 
   const [ localParams, setLocalParams ] = useState({...parameters})
 
@@ -24,7 +24,8 @@ const GraphParameters = ({ parameters, closeModal }) => {
     Object.entries(values).forEach(([key, value]) => {
       values[key] = parseFloat(values[key])
     })
-    console.log(values)
+    setParameters(values)
+    loadGraph()
   }
 
   return (
@@ -74,7 +75,7 @@ const GraphParameters = ({ parameters, closeModal }) => {
   )
 }
 
-export default connect(mapStateToProps)(GraphParameters)
+export default connect(mapStateToProps, { setParameters, loadGraph })(GraphParameters)
 
 //region Style
 
