@@ -54,3 +54,5 @@ export const applyFilters = data => ({ type: t.APPLY_FILTERS, data })
 export const setDimensions = data => ({ type: t.SET_DIMENSIONS, data })
 
 export const setParameters = data => ({ type: t.SET_PARAMETERS, data })
+
+export const setSelectGraphValue = data => ({ type: t.SELECT_GRAPH_VALUE, data })

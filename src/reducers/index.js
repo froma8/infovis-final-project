@@ -1,6 +1,7 @@
 import { combineReducers } from 'redux'
 import graph from './graph'
 import filters from './filters'
+import select from './select'
 
 export const getSelectedNode = state => state.graph.selectedNode
 export const getRawGraph = state => state.graph.raw
@@ -14,9 +15,10 @@ export const getParameters = state => state.graph.parameters
 export const getFilters = state => state.filters
 export const getMin = state => state.filters.min
 export const getMax = state => state.filters.max
-
+export const getSelectValue = state => state.select.value
 
 export default combineReducers({
   graph,
-  filters
+  filters,
+  select
 })
