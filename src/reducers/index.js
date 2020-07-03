@@ -9,6 +9,7 @@ export const getCommunities = state => state.graph.communities
 export const getSelectedCommunities = state => state.graph.selectedCommunities
 export const getWidth = state => state.graph.width
 export const getHeight = state => state.graph.height
+export const getParameters = state => state.graph.parameters
 export const getFilters = state => state.filters
 export const getMin = state => state.filters.min
 export const getMax = state => state.filters.max
