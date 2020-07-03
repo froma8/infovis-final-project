@@ -3,7 +3,6 @@ import { getSelectedCommunities, getFilters } from '../reducers'
 import { connect } from 'react-redux'
 import Graph from './Graph'
 import GraphContainer from './GraphContainer'
-import GraphShadow from './GraphShadow'
 import styled from 'styled-components'
 
 const COMMUNITIES_DISTANCE = 150
@@ -102,7 +101,6 @@ const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
         {communities.map(({ nodes, edges }, index) =>
           <g key={index}>
             <GraphContainer nodes={nodes} />
-            <GraphShadow nodes={nodes} />
             <Graph nodes={nodes} edges={edges} compressed />
           </g>
         )}
