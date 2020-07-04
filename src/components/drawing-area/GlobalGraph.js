@@ -1,9 +1,9 @@
 import React from 'react'
 import styled from 'styled-components'
 import { connect } from 'react-redux'
-import { getNodes, getEdges } from '../reducers'
-import Node from './Node'
-import Edge from './Edge'
+import { getNodes, getEdges } from '../../reducers'
+import Node from '../graph/Node'
+import Edge from '../graph/Edge'
 
 const mapStateToProps = state => ({
   nodes: getNodes(state),

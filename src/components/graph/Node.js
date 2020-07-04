@@ -1,7 +1,7 @@
 import React from 'react'
 import { connect } from 'react-redux'
-import { getSelectedNode, getEdges, getCommunities } from '../reducers'
-import { selectNode, selectCommunities } from '../actions'
+import { getSelectedNode, getEdges, getCommunities } from '../../reducers'
+import { selectNode, selectCommunities } from '../../actions'
 
 const mapStateToProps = state => ({
   selectedNode: getSelectedNode(state),
