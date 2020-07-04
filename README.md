@@ -10,9 +10,9 @@ You can load a JSON file so formatted:
 ```
 You can obtain such file using [this](https://github.com/froma8/infovis-final-project/blob/master/scripts/2plexesToJSON.js) script, giving as input two files:
 ```bash
-node 2plexesToJSON.js <path-to-communities-file> <path-to-edges-file> <output-file>
+node 2plexesToJSON.js <path-to-communities-file> <path-to-edges-file> <output-file>.json
 ```
-Where the two input files are so made:
+Where the two input files are so made:  
 **communities file:** (one community per row)
 ```
 [33, 34, 35, 37]
