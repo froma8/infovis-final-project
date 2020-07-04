@@ -3,24 +3,23 @@ import ReactDOM from 'react-dom'
 import App from './App'
 import * as serviceWorker from './serviceWorker'
 import { Provider } from 'react-redux'
-import { loadGraph, setDimensions } from './actions'
+import { loadRawGraph, loadGraph, setDimensions } from './actions'
 import store from './configureStore'
 import dataset from './data/dolphins.json'
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const { width, height } = document.getElementById('drawing-area').getBoundingClientRect()
-  store.dispatch(setDimensions({width, height}))
+  store.dispatch(setDimensions({ width, height }))
   if (process.env.REACT_APP_PRE_LOAD) {
-    store.dispatch(loadGraph(dataset))
+    store.dispatch(loadRawGraph(dataset))
+    store.dispatch(loadGraph())
   }
 })
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById('root')
 )
 

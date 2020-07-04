@@ -2,7 +2,7 @@ import React, { useCallback } from 'react'
 import styled from 'styled-components'
 import { useDropzone } from 'react-dropzone'
 import { connect } from 'react-redux'
-import { loadGraph } from '../../actions'
+import { loadRawGraph, loadGraph, setSelectGraphValue } from '../../actions'
 const { isArray } = Array
 
 const getBackgroundColor = ({isDragAccept, isDragReject, isDragActive}) => {
@@ -32,7 +32,7 @@ const getBorderColor = ({isDragAccept, isDragReject, isDragActive}) => {
   return '#9c9c9c';
 }
 
-const DropArea = ({ loadGraph }) => {
+const DropArea = ({ loadRawGraph, loadGraph, setSelectGraphValue }) => {
 
   const onDrop = useCallback((acceptedFiles) => {
     const file = acceptedFiles[0]
@@ -54,12 +54,13 @@ const DropArea = ({ loadGraph }) => {
         return alert('JSON file must contain 3 arrays: nodes, edges and communities')
       }
 
-      loadGraph(loadedFile)
-
+      loadRawGraph(loadedFile)
+      loadGraph()
+      setSelectGraphValue(null)
     }
 
     reader.readAsText(file)
-  }, [loadGraph])
+  }, [loadRawGraph, loadGraph, setSelectGraphValue])
 
 
   const {
@@ -80,7 +81,7 @@ const DropArea = ({ loadGraph }) => {
   )
 }
 
-export default connect(null, { loadGraph })(DropArea)
+export default connect(null, { loadRawGraph, loadGraph, setSelectGraphValue })(DropArea)
 
 //region Style
 

@@ -1,17 +1,21 @@
 import * as t from './types'
 import getNodesCoordinates from '../helpers/getNodesCoordinates'
-import { getWidth, getHeight} from '../reducers'
+import { getWidth, getHeight, getRawGraph, getParameters } from '../reducers'
 
 export const selectNode = (data) => ({ type: t.SELECT_NODE, data })
 
-export const loadGraph = (data) => (dispatch, getState) => {
+export const loadRawGraph = data => ({ type: t.LOAD_RAW_GRAPH, data })
+
+export const loadGraph = () => (dispatch, getState) => {
   const state = getState()
   const graph = {}
-  const nodesCoordinates = getNodesCoordinates(data, getWidth(state), getHeight(state))
+  const edges = [...state.graph.raw.edges]
+  const communities = [...state.graph.raw.communities]
+  const nodesCoordinates = getNodesCoordinates(getRawGraph(state), getWidth(state), getHeight(state), getParameters(state))
   graph.nodes = [...nodesCoordinates.values()]
 
   const newEdges = new Map()
-  data.edges.forEach(edge => {
+  edges.forEach(edge => {
     const [first, second] = edge.split('-')
     const nodeA = nodesCoordinates.get(first)
     const nodeB = nodesCoordinates.get(second)
@@ -21,7 +25,7 @@ export const loadGraph = (data) => (dispatch, getState) => {
   })
   graph.edges = [...newEdges.values()]
   graph.communities = []
-  data.communities.forEach((plex) => {
+  communities.forEach((plex) => {
     graph.communities.push(plex.map(node => nodesCoordinates.get(node.toString())))
   })
   dispatch({ type: t.LOAD_GRAPH, data: graph })
@@ -47,4 +51,8 @@ export const selectCommunities = data => {
 
 export const applyFilters = data => ({ type: t.APPLY_FILTERS, data })
 
-export const setDimensions = data => ({ type: t.SET_DIMENSIONS, data})
+export const setDimensions = data => ({ type: t.SET_DIMENSIONS, data })
+
+export const setParameters = data => ({ type: t.SET_PARAMETERS, data })
+
+export const setSelectGraphValue = data => ({ type: t.SELECT_GRAPH_VALUE, data })

@@ -2,6 +2,7 @@ import React from 'react'
 import styled from 'styled-components'
 import DropArea from './DropArea'
 import Filters from './Filters'
+import SelectGraph from './SelectGraph'
 import { connect } from 'react-redux'
 import { getSelectedCommunities } from '../../reducers'
 
@@ -15,7 +16,11 @@ const Menu = ({ selectedCommunities }) => {
   return (
     <Container>
       <DropArea />
-      { selectedCommunities && <Filters selectedCommunities={selectedCommunities}/> }
+      {selectedCommunities && <Filters selectedCommunities={selectedCommunities} />}
+      {!selectedCommunities && <ContainerSelectGraph>
+        Upload default graph
+          <SelectGraph />
+      </ContainerSelectGraph>}
     </Container>
   )
 }
@@ -32,4 +37,7 @@ const Container = styled.div`
   padding: 10px 15px;
 `
 
+const ContainerSelectGraph = styled.div`
+  margin-top: 50px;
+`
 //endregion
