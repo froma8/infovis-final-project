@@ -21,13 +21,14 @@ const options = [
   { value: 'opsahl_southern_women', label: 'Opsahl Southern Women' }
 ]
 
+const datasetsMap = new Map()
+datasetsMap.set('contiguous_usa', contiguousUsa)
+datasetsMap.set('dolphins', Dolphins)
+datasetsMap.set('moreno_sheep', MorenoSheep)
+datasetsMap.set('moreno_train', MorenoTrain)
+datasetsMap.set('opsahl_southern_women', OpsahlSouthernWomen)
+
 const SelectGraph = ({ loadRawGraph, loadGraph, selectValue, setSelectGraphValue }) => {
-  const datasetsMap = new Map()
-  datasetsMap.set('contiguous_usa', contiguousUsa)
-  datasetsMap.set('dolphins', Dolphins)
-  datasetsMap.set('moreno_sheep', MorenoSheep)
-  datasetsMap.set('moreno_train', MorenoTrain)
-  datasetsMap.set('opsahl_southern_women', OpsahlSouthernWomen)
 
   const onChangeFunc = dataset => {
     setSelectGraphValue(dataset)

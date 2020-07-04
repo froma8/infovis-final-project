@@ -17,10 +17,10 @@ const Menu = ({ selectedCommunities }) => {
     <Container>
       <DropArea />
       {selectedCommunities && <Filters selectedCommunities={selectedCommunities} />}
-      <ContainerSelectGraph hide={!!selectedCommunities}>
+      {!selectedCommunities && <ContainerSelectGraph>
         Upload default graph
           <SelectGraph />
-      </ContainerSelectGraph>
+      </ContainerSelectGraph>}
     </Container>
   )
 }
@@ -39,6 +39,5 @@ const Container = styled.div`
 
 const ContainerSelectGraph = styled.div`
   margin-top: 50px;
-  ${props => props.hide ? 'display: none;' : ''}
 `
 //endregion

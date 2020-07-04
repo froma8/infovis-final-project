@@ -9,7 +9,7 @@ import dataset from './data/dolphins.json'
 
 document.addEventListener('DOMContentLoaded', (event) => {
   const { width, height } = document.getElementById('drawing-area').getBoundingClientRect()
-  store.dispatch(setDimensions({width, height}))
+  store.dispatch(setDimensions({ width, height }))
   if (process.env.REACT_APP_PRE_LOAD) {
     store.dispatch(loadRawGraph(dataset))
     store.dispatch(loadGraph())
@@ -17,11 +17,9 @@ document.addEventListener('DOMContentLoaded', (event) => {
 })
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Provider store={store}>
-      <App />
-    </Provider>
-  </React.StrictMode>,
+  <Provider store={store}>
+    <App />
+  </Provider>,
   document.getElementById('root')
 )
 

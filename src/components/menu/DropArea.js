@@ -60,7 +60,7 @@ const DropArea = ({ loadRawGraph, loadGraph, setSelectGraphValue }) => {
     }
 
     reader.readAsText(file)
-  }, [loadRawGraph, loadGraph])
+  }, [loadRawGraph, loadGraph, setSelectGraphValue])
 
 
   const {
