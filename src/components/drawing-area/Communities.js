@@ -1,8 +1,8 @@
 import React, { useState, useEffect } from 'react'
-import { getSelectedCommunities, getFilters } from '../reducers'
+import { getSelectedCommunities, getFilters } from '../../reducers'
 import { connect } from 'react-redux'
-import Graph from './Graph'
-import GraphContainer from './GraphContainer'
+import Graph from '../graph/Graph'
+import GraphContainer from '../graph/GraphContainer'
 import styled from 'styled-components'
 
 const COMMUNITIES_DISTANCE = 150

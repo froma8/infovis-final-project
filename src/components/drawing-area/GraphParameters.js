@@ -1,8 +1,8 @@
 import React, { useState } from 'react'
 import { connect } from 'react-redux'
 import styled from 'styled-components'
-import { getParameters } from '../reducers'
-import { setParameters, loadGraph } from '../actions'
+import { getParameters } from '../../reducers'
+import { setParameters, loadGraph } from '../../actions'
 
 const mapStateToProps = state => ({
   parameters: getParameters(state)
@@ -85,7 +85,7 @@ const Form = styled.form`
   flex-direction: column;
   align-items: center;
   justify-content: center;
-  padding: 5px;
+  padding: 5px 30px;
 `
 
 const Field = styled.div`
