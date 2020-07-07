@@ -83,7 +83,6 @@ const Communities = ({ width, height, selectedCommunities, filters, selectNode }
         }
       })
 
-    console.log(filteredCommunities)
     if (filteredCommunities.length === 0) return setDefaultValues()
     let newCommunities = [filteredCommunities[0]]
     const nodesUnique = new Map()
