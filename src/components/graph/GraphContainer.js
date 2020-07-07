@@ -16,25 +16,16 @@ const GraphContainer = ({ nodes, width }) => {
   const base = topRight.x - topLeft.x
 
   const getIncrement = () => {
-    const outLeft = bottomLeft.x - (0.2 * base) < 0
-    const outRight = bottomRight.x + (0.2 * base) > width
-    const offsetLeft = Math.abs(bottomLeft.x - (0.2 * base))
-    const offsetRight = bottomLeft.x + (0.2 * base) - width
-    if (outLeft && outRight) {
-      return Math.max(offsetLeft, offsetRight)
-    } else if (outLeft) {
-      return offsetLeft
-    } else if (outRight) {
-      return outRight
-    } else {
-      return 0
-    }
-
+    const margin_left = bottomLeft.x
+    const margin_right = width - bottomRight.x
+    const margin = Math.min(margin_left, margin_right) * 0.6
+    const final_margin = margin > (0.2 * base) ? (0.2 * base) : margin
+    return final_margin
   }
 
-  const path = `M ${topLeft.x} ${topLeft.y} L ${topRight.x} ${topRight.y} L ${bottomRight.x + (0.2 * base) + getIncrement()} ${bottomRight.y} L ${bottomLeft.x - (0.2 * base) - getIncrement()} ${bottomLeft.y} Z`
+  const path = `M ${topLeft.x} ${topLeft.y} L ${topRight.x} ${topRight.y} L ${bottomRight.x + getIncrement()} ${bottomRight.y} L ${bottomLeft.x - getIncrement()} ${bottomLeft.y} Z`
   return (
-    <path d={`${path}`} fillOpacity="0.2" strokeWidth="20" fill="lightgray"/>
+    <path d={`${path}`} fillOpacity="0.2" strokeWidth="20" fill="lightgray" />
   )
 }
 
