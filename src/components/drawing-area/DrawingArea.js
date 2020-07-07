@@ -42,7 +42,7 @@ const DrawingArea = ({ selectedNode, selectNode, selectCommunities, width, heigh
   return (
     <Container id='drawing-area'>
       {selectedNode
-        ? (<Communities width={width} />)
+        ? (<Communities width={width} height={height} />)
         : (<GlobalGraph width={width} height={height} />)
       }
       { selectedNode && <GoBack src={imgBack} onClick={goBack}/>}

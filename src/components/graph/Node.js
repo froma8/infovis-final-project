@@ -14,9 +14,12 @@ const selectNodeAndCommunities = (label, selectNode, selectCommunities, edges, c
   selectCommunities({ label, edges, communities })
 }
 
-const Node = ({ x, y, size = 2, label, selectedNode, selectNode, selectCommunities, edges, communities, compressed }) => {
+const Node = ({ x, y, size = 2, label, selectedNode, selectNode, selectCommunities, edges, communities, compressed, transform }) => {
   return (
-    <g style={{ cursor: 'pointer'}} onClick={() => selectNodeAndCommunities(label, selectNode, selectCommunities, edges, communities)} >
+    <g style={{ cursor: 'pointer'}}
+       onClick={() => selectNodeAndCommunities(label, selectNode, selectCommunities, edges, communities)}
+       transform={transform}
+    >
       <ellipse
         cx={x}
         cy={y}
