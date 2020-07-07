@@ -8,6 +8,7 @@ import styled from 'styled-components'
 const COMMUNITIES_DISTANCE = 150
 const SCALE_Y_FACTOR = 0.7
 const DEFAULT_NODE_SIZE = 15
+const PADDING = 100
 
 const mapStateToProps = state => ({
   selectedCommunities: getSelectedCommunities(state),
@@ -23,12 +24,12 @@ const isBetweenMinMax = (filters, nodes) => {
 }
 
 const scaleValue = (value, from, to = [DEFAULT_NODE_SIZE, DEFAULT_NODE_SIZE * 1.35]) => {
-  var scale = (to[1] - to[0]) / (from[1] - from[0]);
-  var capped = Math.min(from[1], Math.max(from[0], value)) - from[0];
-  return ~~(capped * scale + to[0]);
+  const scale = (to[1] - to[0]) / (from[1] - from[0])
+  const capped = Math.min(from[1], Math.max(from[0], value)) - from[0]
+  return ~~(capped * scale + to[0])
 }
 
-const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
+const Communities = ({ width, height, selectedCommunities, filters, selectNode }) => {
   const [communities, setCommunities] = useState([])
   const [nodesX, setNodesX] = useState([])
   const [overallHeight, setOverallHeight] = useState(0)
@@ -40,9 +41,35 @@ const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
   }
 
   useEffect(() => {
+    if (!selectedCommunities) return
+    const allNodes = selectedCommunities.map(c => c.nodes).flat()
+
+    const sortByX = [...allNodes].sort((a, b) => a.x - b.x)
+    const sortByY = [...allNodes].sort((a, b) => a.y - b.y)
+
+    const minX = sortByX[0].x
+    const maxX = sortByX[allNodes.length - 1].x
+    const minY = sortByY[0].y
+    const maxY = sortByY[allNodes.length - 1].y
+
+    const scaleX = value => scaleValue(value, [minX, maxX], [PADDING, width - PADDING])
+    const scaleY = value =>  scaleValue(value, [minY, maxY], [PADDING, height - PADDING])
+
+    const out = n => n.x <= PADDING || n.x > width - PADDING || n.y < PADDING || n.y > height - PADDING
+
     // Applies filters on communities and scales nodes and edges coordinates
     const filteredCommunities = [...selectedCommunities]
       .filter(({ nodes }) => isBetweenMinMax(filters, nodes))
+      .map(({ nodes, edges }) => ({
+        nodes: nodes.map(n => ({...n, x: out(n) ? scaleX(n.x): n.x, y: out(n) ? scaleY(n.y) : n.y })) ,
+        edges: edges.map(e => ({
+          ...e,
+          x1: out({x: e.x1, y: e.y1}) ? scaleX(e.x1) : e.x1,
+          y1: out({x: e.x1, y: e.y1}) ? scaleY(e.y1) : e.y1,
+          x2: out({x: e.x2, y: e.y2}) ? scaleX(e.x2) : e.x2,
+          y2: out({x: e.x2, y: e.y2}) ? scaleY(e.y2) : e.y2
+        }))
+      }))
       .map(({ nodes, edges }) => {
         const sortedNodes = nodes.sort((a, b) => a.y - b.y)
         const minY = sortedNodes[0].y
@@ -54,8 +81,8 @@ const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
           nodes: nodesComputed,
           edges: edges.map(e => ({ ...e, y1: e.y1 * SCALE_Y_FACTOR, y2: e.y2 * SCALE_Y_FACTOR }))
         }
-      }
-      )
+      })
+
     if (filteredCommunities.length === 0) return setDefaultValues()
     let newCommunities = [filteredCommunities[0]]
     const nodesUnique = new Map()
@@ -100,7 +127,7 @@ const Communities = ({ width, selectedCommunities, filters, selectNode }) => {
         )}
         {communities.map(({ nodes, edges }, index) =>
           <g key={index}>
-            <GraphContainer nodes={nodes} />
+            <GraphContainer nodes={nodes} width={width}/>
             <Graph nodes={nodes} edges={edges} compressed />
           </g>
         )}
