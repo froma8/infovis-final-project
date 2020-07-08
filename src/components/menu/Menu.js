@@ -22,10 +22,13 @@ const Menu = ({ selectedCommunities }) => {
             <SelectGraph />
           </ContainerSelectGraph>
         }
-        <Title>Or upload yours </Title>
-        <DropArea />
+        {!selectedCommunities &&
+          <Title>
+            Or upload yours
+          </Title> &&
+          <DropArea />
+        }
         {selectedCommunities && <Filters selectedCommunities={selectedCommunities} />}
-
       </AboveArea>
       <Credits>
         <Title>Credits</Title>
